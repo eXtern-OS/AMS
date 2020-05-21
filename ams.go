@@ -15,7 +15,7 @@ func makehash(data string) string {
 
 // Don't forget to init beatrix in main code.
 
-func Init(addr, username, password, mongoUri, mysqlURI string) {
+func Init(mongoUri, mysqlURI string) {
 	URI = mongoUri
 	SQL_URI = mysqlURI
 	token.Init(mongoUri)
