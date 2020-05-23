@@ -1,9 +1,9 @@
 package AMS
 
 import (
-	"./token"
 	"crypto/sha1"
 	"encoding/base64"
+	token "github.com/eXtern-OS/TokenMaster"
 	"net/http"
 )
 
