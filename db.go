@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	wphash "github.com/GerardSoleCa/wordpress-hash-go"
 	beatrix "github.com/eXtern-OS/Beatrix"
+	_ "github.com/go-sql-driver/mysql"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

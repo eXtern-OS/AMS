@@ -39,3 +39,5 @@ func GetToken(login, password, ip string) (int, string) {
 		return http.StatusUnauthorized, ""
 	}
 }
+
+func Register() {}
