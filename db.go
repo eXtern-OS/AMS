@@ -156,3 +156,37 @@ func GetUserByID(uid string) Account {
 	}
 	return acc
 }
+
+func UpdateDatabase(name, username, avatarurl, password, uid string) {
+	client, err := mongo.NewClient(options.Client().ApplyURI(URI))
+	if err != nil {
+		log.Println(err)
+		go beatrix.SendError("Error creating new mongo client", "AMS.UPDATEDATABASE")
+		return
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Println(err)
+		go beatrix.SendError("Error connecting with new mongo client", "AMS.UPDATEDATABASE")
+		return
+	}
+
+	var collection = client.Database("Users").Collection("accounts")
+	// Updating objects
+	filter := bson.M{"uid": uid}
+	update := bson.M{
+		"$set": bson.M{
+			"name":       name,
+			"avatar_url": avatarurl,
+			"password":   makehash(password),
+			"username":   username,
+		},
+	}
+	_, err = collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		log.Println(err)
+		go beatrix.SendError("Error updating database", "AMS.UPDATEDATABASE")
+	}
+	return
+}
