@@ -125,3 +125,34 @@ func GetPasswordHashed(login, password string) (string, string) {
 
 	return pwd, uid
 }
+
+func GetUserByID(uid string) Account {
+	client, err := mongo.NewClient(options.Client().ApplyURI(URI))
+	if err != nil {
+		log.Println(err)
+		go beatrix.SendError("Error creating new mongo client", "GETUSERBYID")
+		return Account{}
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Println(err)
+		go beatrix.SendError("Error connecting with new mongo client", "GETUSERBYID")
+		return Account{}
+	}
+
+	var collection = client.Database("Users").Collection("accounts")
+
+	filter := bson.M{"uid": uid}
+
+	var acc Account
+
+	err = collection.FindOne(ctx, filter).Decode(&acc)
+	if err != nil {
+		log.Println(err)
+		// Seems nothing found - better search on wordpress
+		go beatrix.SendError("Error creating new mongo client", "GETUSERBYID")
+		return Account{}
+	}
+	return acc
+}
