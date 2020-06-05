@@ -5,6 +5,8 @@ import (
 	"encoding/base64"
 	token "github.com/eXtern-OS/TokenMaster"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 func makehash(data string) string {
@@ -40,4 +42,25 @@ func GetToken(login, password, ip string) (int, string) {
 	}
 }
 
-func Register() {}
+func Register(name, username, login, avatarurl, pwd, website, email string) {
+	var acc = Account{
+		Login:      login,
+		Password:   makehash(pwd),
+		Username:   username,
+		Name:       name,
+		AvatarURL:  avatarurl,
+		Developer:  false,
+		Patreon:    false,
+		Registered: time.Now().Format(time.RFC1123Z),
+		Website:    website,
+		Email:      email,
+	}
+
+	if !CheckIfExists(email) {
+		return
+	}
+
+	acc.UID = makehash(acc.Password + login + acc.Registered + strconv.Itoa(random(1000, 2000)))
+	_ = UpdateDB(acc)
+	return
+}

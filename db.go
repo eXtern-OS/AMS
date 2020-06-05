@@ -190,3 +190,26 @@ func UpdateDatabase(name, username, avatarurl, password, uid string) {
 	}
 	return
 }
+
+func CheckIfExists(email string) bool {
+	client, err := mongo.NewClient(options.Client().ApplyURI(URI))
+	if err != nil {
+		log.Println(err)
+		go beatrix.SendError("Error creating new mongo client", "AMS.CHECKIFEXISTS")
+		return false
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Println(err)
+		go beatrix.SendError("Error connecting with new mongo client", "AMS.CHECKIFEXISTS")
+		return false
+	}
+
+	var collection = client.Database("Users").Collection("accounts")
+	fiter := bson.M{"email": email}
+
+	var a Account
+	err = collection.FindOne(context.Background(), fiter).Decode(&a)
+	return !(err == nil)
+}
