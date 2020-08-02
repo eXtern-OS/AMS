@@ -61,6 +61,5 @@ func Register(name, username, login, avatarurl, pwd, website, email string) bool
 	}
 
 	acc.UID = makehash(acc.Password + login + acc.Registered + strconv.Itoa(random(1000, 2000)))
-	_ = UpdateDB(acc)
-	return false
+	return UpdateDB(acc)
 }
