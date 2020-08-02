@@ -42,7 +42,7 @@ func GetToken(login, password, ip string) (int, string) {
 	}
 }
 
-func Register(name, username, login, avatarurl, pwd, website, email string) {
+func Register(name, username, login, avatarurl, pwd, website, email string) bool {
 	var acc = Account{
 		Login:      login,
 		Password:   makehash(pwd),
@@ -57,10 +57,10 @@ func Register(name, username, login, avatarurl, pwd, website, email string) {
 	}
 
 	if !CheckIfExists(email) {
-		return
+		return false
 	}
 
 	acc.UID = makehash(acc.Password + login + acc.Registered + strconv.Itoa(random(1000, 2000)))
 	_ = UpdateDB(acc)
-	return
+	return false
 }
