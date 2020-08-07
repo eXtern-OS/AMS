@@ -26,13 +26,13 @@ func Init(mongoUri, mysqlURI string) {
 
 func GetToken(login, password, ip string) (int, string) {
 	if login == "" || password == "" {
-		return http.StatusNoContent, ""
+		return http.StatusBadRequest, ""
 	}
 
 	hashed, uid := GetPasswordHashed(login, password)
 
 	if hashed == "" || uid == "" {
-		return http.StatusNonAuthoritativeInfo, ""
+		return http.StatusBadRequest, ""
 	}
 
 	if makehash(password) == hashed {
