@@ -21,6 +21,7 @@ func Init(mongoUri, mysqlURI string) {
 	URI = mongoUri
 	SQL_URI = mysqlURI
 	token.Init(mongoUri)
+	initDb()
 }
 
 func GetToken(login, password, ip string) (int, string) {
@@ -56,7 +57,7 @@ func Register(name, username, login, avatarurl, pwd, website, email string) bool
 		Email:      email,
 	}
 
-	if !CheckIfExists(email) {
+	if CheckIfExists(email) {
 		return false
 	}
 
